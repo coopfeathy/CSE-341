@@ -1,0 +1,23 @@
+{
+    "contact": {
+      "firstName": "Carter",
+      "lastName": "Featherstone",
+      "email": "Carter@test.com",
+      "favoriteColor": "Red",
+      "birthday": "07/08/05"
+    },
+    "contact2": {
+      "firstName": "Mack",
+      "lastName": "Featherstone",
+      "email": "Mack@test.com",
+      "favoriteColor": "Gold",
+      "birthday": "10/30/07"
+    },
+    "contact3": {
+      "firstName": "Cooper",
+      "lastName": "Featherstone",
+      "email": "cooper@test.com",
+      "favoriteColor": "Blue",
+      "birthday": "04/14/02"
+    }
+  }

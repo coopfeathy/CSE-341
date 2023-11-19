@@ -26,6 +26,11 @@ const getSingle = async (req, res, next) => {
 
 //Create User
 const createUser = async (req, res) => {
+  // Add basic validation for required fields
+  if (!req.body.email || !req.body.name || !req.body.username) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
   //#swagger.tags=['Users']
   const newUser = {
     email: req.body.email,
@@ -44,6 +49,11 @@ const createUser = async (req, res) => {
 
 //update user
 const updateUser = async (req, res) => {
+  // Add basic validation for required fields
+  if (!req.body.email || !req.body.name || !req.body.username) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
   //#swagger.tags=['Users']
   const userId = new ObjectId(req.params.id);
   const newUser = {
@@ -63,6 +73,11 @@ const updateUser = async (req, res) => {
 
 //delete user
 const deleteUser = async (req, res) => {
+   // Check if userId is valid ObjectId
+   if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid User ID' });
+  }
+
   //#swagger.tags=['Users']
   const userId = new ObjectId(req.params.id);
   try {

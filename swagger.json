@@ -5,9 +5,10 @@
     "description": "Users API",
     "version": "1.0.0"
   },
-  "host": "cse-341-yn7m.onrender.com",
+  "host": "localhost:8080",
   "basePath": "/",
   "schemes": [
+    "http",
     "https"
   ],
   "paths": {
@@ -24,23 +25,17 @@
     },
     "/users/": {
       "get": {
-        "tags": [
-          "Users"
-        ],
         "description": "",
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "post": {
-        "tags": [
-          "Users"
-        ],
         "description": "",
         "parameters": [
           {
@@ -49,16 +44,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "email": {
-                  "example": "any"
-                },
-                "name": {
+                "googleId": {
                   "example": "any"
                 },
                 "username": {
                   "example": "any"
                 },
-                "ipaddress": {
+                "email": {
                   "example": "any"
                 }
               }
@@ -66,8 +58,8 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "201": {
+            "description": "Created"
           },
           "400": {
             "description": "Bad Request"
@@ -80,13 +72,7 @@
     },
     "/users/{id}": {
       "get": {
-        "tags": [
-          "Users"
-        ],
         "description": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "id",
@@ -98,13 +84,16 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "put": {
-        "tags": [
-          "Users"
-        ],
         "description": "",
         "parameters": [
           {
@@ -112,35 +101,17 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "example": "any"
-                },
-                "name": {
-                  "example": "any"
-                },
-                "username": {
-                  "example": "any"
-                },
-                "ipaddress": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK"
           },
           "400": {
             "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -148,9 +119,6 @@
         }
       },
       "delete": {
-        "tags": [
-          "Users"
-        ],
         "description": "",
         "parameters": [
           {
@@ -163,9 +131,6 @@
         "responses": {
           "204": {
             "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -179,12 +144,12 @@
     "/tasks/": {
       "get": {
         "description": "",
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -223,6 +188,9 @@
           "201": {
             "description": "Created"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -232,9 +200,6 @@
     "/tasks/{id}": {
       "get": {
         "description": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "id",
@@ -246,6 +211,12 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -257,38 +228,17 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                },
-                "dueDate": {
-                  "example": "any"
-                },
-                "priority": {
-                  "example": "any"
-                },
-                "category": {
-                  "example": "any"
-                },
-                "completed": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -306,11 +256,14 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

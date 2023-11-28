@@ -1,95 +1,70 @@
-const mongodb = require('../db/connect');
-const ObjectId = require('mongodb').ObjectId;
-
+const User = require('../models/userModel');
+const mongoose = require('mongoose');
 
 const getAll = async (req, res) => {
-  //#swagger.tags=['Users']
-  const result = await mongodb.getDb().collection('contacts').find();
-  result.toArray().then((contacts) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(contacts);
-  });
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
-const getSingle = async (req, res, next) => {
-  //#swagger.tags=['Users']
-  const userId = new ObjectId(req.params.id);
-  const result = await mongodb
-    .getDb()
-    .collection('contacts')
-    .find({ _id: userId });
-  result.toArray().then((lists) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json(lists[0]);
-  });
+const getSingle = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
-//Create User
 const createUser = async (req, res) => {
-  // Add basic validation for required fields
-  if (!req.body.email || !req.body.name || !req.body.username) {
-    return res.status(400).json({ message: 'Missing required fields' });
-  }
+    const { googleId, username, email } = req.body;
 
-  //#swagger.tags=['Users']
-  const newUser = {
-    email: req.body.email,
-    ipaddress: req.body.ipaddress,
-    name: req.body.name,
-    username: req.body.username
-  };
-  const response = await mongodb.getDb().collection('contacts').insertOne(newUser);
-  if (response.acknowledged) {
-      res.status(204).send();
-  } else {
-      res.status(500).json(response.error || 'Error creating contact');
-  }
-  
-}; 
+    if (!googleId || !username || !email) {
+        return res.status(400).json({ message: 'Google ID, username, and email are required' });
+    }
 
-//update user
+    const newUser = new User({ googleId, username, email });
+
+    try {
+        await newUser.save();
+        res.status(201).json(newUser);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 const updateUser = async (req, res) => {
-  // Add basic validation for required fields
-  if (!req.body.email || !req.body.name || !req.body.username) {
-    return res.status(400).json({ message: 'Missing required fields' });
-  }
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ message: 'Invalid User ID' });
+    }
 
-  //#swagger.tags=['Users']
-  const userId = new ObjectId(req.params.id);
-  const newUser = {
-    email: req.body.email,
-    ipaddress: req.body.ipaddress,
-    name: req.body.name,
-    username: req.body.username
-  };
-  const response = await mongodb.getDb().collection('contacts').replaceOne({_id: userId}, newUser);
-  if (response.modifiedCount > 0) {
-      res.status(204).send();
-  } else {
-      res.status(500).json(response.error || 'Error updating contact');
-  }
-
+    try {
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
-//delete user
 const deleteUser = async (req, res) => {
-   // Check if userId is valid ObjectId
-   if (!ObjectId.isValid(req.params.id)) {
-    return res.status(400).json({ message: 'Invalid User ID' });
-  }
-
-  //#swagger.tags=['Users']
-  const userId = new ObjectId(req.params.id);
-  try {
-      const response = await mongodb.getDb().collection('contacts').deleteOne({_id: userId});
-      if (response.deletedCount > 0) {
-          res.status(204).send();
-      } else {
-          res.status(404).json('Contact not found');
-      }
-  } catch (error) {
-      res.status(500).json('Error deleting contact ' + error.message);
-  }
+    try {
+        const result = await User.findByIdAndDelete(req.params.id);
+        if (!result) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(204).send();
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
-module.exports = {getAll, getSingle, createUser, updateUser, deleteUser};
+module.exports = { getAll, getSingle, createUser, updateUser, deleteUser };

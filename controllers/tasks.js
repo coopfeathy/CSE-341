@@ -1,71 +1,69 @@
-const mongodb = require('../db/connect');
-const ObjectId = require('mongodb').ObjectId;
+const Task = require('../models/taskModel');
+const mongoose = require('mongoose');
 
 const getAllTasks = async (req, res) => {
-    const tasks = await mongodb.getDb().collection('tasks').find();
-    tasks.toArray().then((lists) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(lists);
-    });
+    try {
+        const tasks = await Task.find();
+        res.json(tasks);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
 const getSingleTask = async (req, res) => {
-    const taskId = new ObjectId(req.params.id);
-    const task = await mongodb
-        .getDb()
-        .collection('tasks')
-        .find({ _id: taskId });
-    task.toArray().then((lists) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(lists[0]);
-    });
+    try {
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.json(task);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
 const createTask = async (req, res) => {
-    const newTask = {
-        title: req.body.title,
-        description: req.body.description,
-        dueDate: req.body.dueDate,
-        priority: req.body.priority,
-        creationDate: new Date(), // Set at the creation time
-        lastUpdated: null, // Initially null
-        category: req.body.category,
-        completed: req.body.completed || false
-    };
-    const response = await mongodb.getDb().collection('tasks').insertOne(newTask);
-    if (response.acknowledged) {
-        res.status(201).json(response);
-    } else {
-        res.status(500).json(response.error || 'Error occurred while creating the task');
+    const { title, description, dueDate, priority, category, completed } = req.body;
+
+    if (!title) {
+        return res.status(400).json({ message: 'Title is required' });
+    }
+
+    const newTask = new Task({ title, description, dueDate, priority, category, completed });
+
+    try {
+        const savedTask = await newTask.save();
+        res.status(201).json(savedTask);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
 
 const updateTask = async (req, res) => {
-    const taskId = new ObjectId(req.params.id);
-    const task = {
-        title: req.body.title,
-        description: req.body.description,
-        dueDate: req.body.dueDate,
-        priority: req.body.priority,
-        lastUpdated: new Date(), // Update at modification time
-        category: req.body.category,
-        completed: req.body.completed
-    };
-    const response = await mongodb.getDb().collection('tasks').replaceOne({ _id: taskId }, task);
-    if (response.modifiedCount > 0) {
-        res.status(200).json(response);
-    } else {
-        res.status(500).json(response.error || 'Error occurred while updating the task');
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ message: 'Invalid Task ID' });
+    }
+
+    try {
+        const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.json(updatedTask);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
 
 const deleteTask = async (req, res) => {
-    const taskId = new ObjectId(req.params.id);
-    const response = await mongodb.getDb().collection('tasks').deleteOne({ _id: taskId });
-    if (response.deletedCount > 0) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json('Task not found');
+    try {
+        const result = await Task.findByIdAndDelete(req.params.id);
+        if (!result) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.status(204).send();
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
 

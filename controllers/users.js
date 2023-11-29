@@ -23,6 +23,13 @@ const getSingle = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
+
+  const userData = {
+    googleId: req.body.googleId,
+    username: req.body.username,
+    email: req.body.email
+  };
+
     const { googleId, username, email } = req.body;
 
     if (!googleId || !username || !email) {
@@ -43,6 +50,12 @@ const updateUser = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).json({ message: 'Invalid User ID' });
     }
+
+    const userData = {
+      googleId: req.body.googleId,
+      username: req.body.username,
+      email: req.body.email
+    };
 
     try {
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });

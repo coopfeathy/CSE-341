@@ -5,10 +5,9 @@
     "description": "Users API",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
+  "host": "cse-341-yn7m.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http",
     "https"
   ],
   "paths": {
@@ -101,6 +100,24 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "googleId": {
+                  "example": "any"
+                },
+                "username": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -228,6 +245,33 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "dueDate": {
+                  "example": "any"
+                },
+                "priority": {
+                  "example": "any"
+                },
+                "category": {
+                  "example": "any"
+                },
+                "completed": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {

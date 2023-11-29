@@ -23,6 +23,16 @@ const getSingleTask = async (req, res) => {
 };
 
 const createTask = async (req, res) => {
+
+    const newTaskData = {
+        title: req.body.title,
+        description: req.body.description,
+        dueDate: req.body.dueDate,
+        priority: req.body.priority,
+        category: req.body.category,
+        completed: req.body.completed
+    };
+    
     const { title, description, dueDate, priority, category, completed } = req.body;
 
     if (!title) {
@@ -45,6 +55,15 @@ const updateTask = async (req, res) => {
     }
 
     try {
+        const updatedTaskData = {
+            title: req.body.title,
+            description: req.body.description,
+            dueDate: req.body.dueDate,
+            priority: req.body.priority,
+            category: req.body.category,
+            completed: req.body.completed
+        };
+
         const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
         if (!updatedTask) {
             return res.status(404).json({ message: 'Task not found' });

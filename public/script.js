@@ -18,13 +18,12 @@ document.getElementById('task-form').addEventListener('submit', function(e) {
 
     fetch('/tasks', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(taskData)
     })
     .then(response => response.json())
     .then(() => {
+        document.getElementById('task-form').reset(); // Clear form
         loadTasks(); // Reload the tasks
     });
 });
@@ -37,13 +36,37 @@ function loadTasks() {
             tasksList.innerHTML = '';
             tasks.forEach(task => {
                 const li = document.createElement('li');
-                li.textContent = `${task.title} - ${task.description} (Due: ${task.dueDate || 'N/A'}, Priority: ${task.priority}, Category: ${task.category})`;
+                li.innerHTML = `${task.title} - ${task.description}`;
                 if (task.completed) {
-                    li.style.textDecoration = "line-through";
+                    li.classList.add('completed');
                 }
+
+                // Completion Toggle
+                const completeButton = document.createElement('button');
+                completeButton.innerText = task.completed ? 'Unmark' : 'Complete';
+                completeButton.onclick = () => toggleComplete(task._id);
+                li.appendChild(completeButton);
+
+                // Delete Button
+                const deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Delete';
+                deleteButton.onclick = () => deleteTask(task._id);
+                li.appendChild(deleteButton);
+
                 tasksList.appendChild(li);
             });
         });
+}
+
+function deleteTask(taskId) {
+    fetch(`/tasks/${taskId}`, { method: 'DELETE' })
+        .then(() => loadTasks()); // Reload the tasks
+}
+
+function toggleComplete(taskId) {
+    // Assuming your API can toggle the task's completion status
+    fetch(`/tasks/${taskId}/toggle-complete`, { method: 'PUT' })
+        .then(() => loadTasks()); // Reload the tasks
 }
 
 loadTasks();

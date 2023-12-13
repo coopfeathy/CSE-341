@@ -4,18 +4,19 @@ const mongodb = require('./db/connect');
 const passport = require('passport');
 const passportSetup = require('./config/passport-setup'); // Import the passport setup
 const session = require('express-session');
-
+const MongoStore = require('connect-mongo');
 
 const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(session({
-  secret: 'your_secret', // Replace with a real secret from environment variables
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   cookie: {
       httpOnly: true,
-      secure: false, // Set to true if using https
+      secure: false, // Set to true if your site is served over HTTPS
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));

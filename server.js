@@ -9,6 +9,8 @@ const MongoStore = require('connect-mongo');
 const port = process.env.PORT || 8080;
 const app = express();
 
+app.use(express.static('public'));
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,

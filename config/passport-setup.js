@@ -6,7 +6,7 @@ passport.use(
     new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: '/auth/google/redirect'
+        callbackURL: 'https://cse-341-yn7m.onrender.com/auth/google/redirect'
     }, (accessToken, refreshToken, profile, done) => {
         // Check if user already exists in your DB
         User.findOne({ googleId: profile.id }).then((currentUser) => {

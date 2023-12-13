@@ -1,14 +1,75 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
-    padding: 0;
+    padding: 20px;
+    color: #333;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    margin: 20px auto;
+    width: 300px;
+    text-align: left;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     box-sizing: border-box;
 }
 
-#tasks-list {
-    list-style-type: none;
+label {
+    display: block;
+    margin-top: 10px;
 }
 
-#tasks-list li.completed {
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+button {
+    width: 100%;
+    background-color: #5C85D6;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #3e64a0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+    margin: 20px auto;
+    max-width: 300px;
+}
+
+ul li {
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+ul li.completed {
     text-decoration: line-through;
+    color: #777;
 }

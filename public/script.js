@@ -1,16 +1,27 @@
 document.getElementById('task-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    const taskInput = document.getElementById('task-input');
-    const task = taskInput.value;
-    taskInput.value = '';
+    const title = document.getElementById('task-title').value;
+    const description = document.getElementById('task-description').value;
+    const dueDate = document.getElementById('task-due-date').value;
+    const priority = document.getElementById('task-priority').value;
+    const category = document.getElementById('task-category').value;
+    const completed = document.getElementById('task-completed').checked;
 
-    // Add the task to the backend
+    const taskData = {
+        title,
+        description,
+        dueDate,
+        priority,
+        category,
+        completed
+    };
+
     fetch('/tasks', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title: task })
+        body: JSON.stringify(taskData)
     })
     .then(response => response.json())
     .then(() => {
@@ -19,7 +30,6 @@ document.getElementById('task-form').addEventListener('submit', function(e) {
 });
 
 function loadTasks() {
-    // Fetch tasks from the backend
     fetch('/tasks')
         .then(response => response.json())
         .then(tasks => {
@@ -27,14 +37,13 @@ function loadTasks() {
             tasksList.innerHTML = '';
             tasks.forEach(task => {
                 const li = document.createElement('li');
-                li.textContent = task.title;
-                li.addEventListener('click', () => {
-                    li.classList.toggle('completed');
-                });
+                li.textContent = `${task.title} - ${task.description} (Due: ${task.dueDate || 'N/A'}, Priority: ${task.priority}, Category: ${task.category})`;
+                if (task.completed) {
+                    li.style.textDecoration = "line-through";
+                }
                 tasksList.appendChild(li);
             });
         });
 }
 
-// Initial load of tasks
 loadTasks();

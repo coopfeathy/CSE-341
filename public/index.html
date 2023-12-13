@@ -10,7 +10,19 @@
     <h1>To-Do App</h1>
 
     <form id="task-form">
-        <input type="text" id="task-input" placeholder="Enter a new task">
+        <input type="text" id="task-title" placeholder="Task Title" required>
+        <textarea id="task-description" placeholder="Task Description"></textarea>
+        <input type="date" id="task-due-date" placeholder="Due Date">
+        <select id="task-priority">
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+        </select>
+        <input type="text" id="task-category" placeholder="Category">
+        <label>
+            Completed:
+            <input type="checkbox" id="task-completed">
+        </label>
         <button type="submit">Add Task</button>
     </form>
 
